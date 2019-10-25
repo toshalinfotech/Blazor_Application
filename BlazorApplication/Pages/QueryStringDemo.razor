@@ -1,0 +1,13 @@
+﻿@page "/querystring-demo"
+@inject NavigationManager navManager
+
+<h3>QueryString Demo</h3>
+<button @onclick="Navigate">Fetch Portal 1's Users</button>
+
+@code {
+    void Navigate()
+    {
+        var query = new Dictionary<string, string> { { "portal", "1" } };
+        navManager.NavigateTo(QueryHelpers.AddQueryString("/fetchdata", query));
+    }
+}

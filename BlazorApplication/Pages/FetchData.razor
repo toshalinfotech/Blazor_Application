@@ -1,0 +1,52 @@
+﻿@page "/fetchdata"
+
+@using BlazorApplication.Data
+@inject PortalService portalService
+@inject NavigationManager navManager
+
+<h1>Portal Users</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (users == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>User Id</th>
+                <th>Username</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.CreatedDate.ToShortDateString()</td>
+                    <td>@user.UserId</td>
+                    <td>@user.Username</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    PortalUsers[] users;
+
+    protected override async Task OnInitializedAsync()
+    {
+        string portalId = "0";
+        var uri = navManager.ToAbsoluteUri(navManager.Uri);
+
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("portal", out var param))
+        {
+            portalId = param.First();
+        }
+        users = await portalService.GetPortalUsersAsync(Convert.ToInt32(portalId));
+    }
+}
